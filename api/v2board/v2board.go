@@ -45,9 +45,8 @@ func New(apiConfig *api.Config) *APIClient {
 			log.Print(v.Err)
 		}
 	})
-	client.SetHostURL(apiConfig.APIHost)
+	client.SetBaseURL(apiConfig.APIHost)
 	// Create Key for each requests
-	client.SetQueryParam("key", apiConfig.Key)
 	client.SetQueryParams(map[string]string{
 		"node_id":    strconv.Itoa(apiConfig.NodeID),
 		"token":      apiConfig.Key,
@@ -360,7 +359,19 @@ func (c *APIClient) ParseV2rayNodeResponse(nodeInfoResponse *simplejson.Json) (*
 	if c.EnableXTLS {
 		TLSType = "xtls"
 	}
-	inboundInfo := nodeInfoResponse.Get("inbound")
+
+	inboundInfo := simplejson.New()
+	if tmpInboundInfo, ok := nodeInfoResponse.CheckGet("inbound"); ok {
+		inboundInfo = tmpInboundInfo
+		// Compatible with v2board 1.5.5-dev
+	} else if tmpInboundInfo, ok := nodeInfoResponse.CheckGet("inbounds"); ok {
+		tmpInboundInfo := tmpInboundInfo.MustArray()
+		marshal_byte, _ := json.Marshal(tmpInboundInfo[0].(map[string]interface{}))
+		inboundInfo, _ = simplejson.NewJson(marshal_byte)
+	} else {
+		return nil, fmt.Errorf("Unable to find inbound(s) in the nodeInfo.")
+	}
+
 	port := inboundInfo.Get("port").MustInt()
 	transportProtocol := inboundInfo.Get("streamSettings").Get("network").MustString()
 
