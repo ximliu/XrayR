@@ -13,7 +13,7 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/imdario/mergo v0.3.12
 	github.com/juju/ratelimit v1.0.1
-	github.com/r3labs/diff/v2 v2.15.0
+	github.com/r3labs/diff/v2 v2.15.1
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.1
@@ -22,7 +22,7 @@ require (
 	github.com/xtls/xray-core v1.5.4
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
